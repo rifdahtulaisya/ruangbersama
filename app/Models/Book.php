@@ -15,6 +15,12 @@ class Book extends Model
         return $this->belongsTo(Category::class);
     }
 
+    // Book 1 - N Loan
+    public function loans()
+    {
+        return $this->hasMany(Loan::class, 'id_books');
+    }
+    
     // Method untuk mengurangi stok
     public function decrementStock($amount = 1)
     {

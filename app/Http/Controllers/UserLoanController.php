@@ -167,9 +167,19 @@ public function index(Request $request)
             ->where('status', 'borrowed')
             ->findOrFail($id);
 
+        // Gunakan waktu Indonesia (WIB)
+        $now = Carbon::now('Asia/Jakarta');
+        
+        // Cek apakah sudah terlambat (gunakan tanggal dari waktu Indonesia)
+        $telat = false;
+        if ($loan->tgl_kembali_rencana < $now->toDateString()) {
+            $telat = true;
+        }
+
         $loan->update([
             'status' => 'returned',
-            'tgl_kembali_real' => Carbon::now()
+            'tgl_kembali_realisasi' => $now,  // simpan dengan waktu Indonesia
+            'teguran' => $telat ? 'Terlambat mengembalikan buku' : null
         ]);
 
         // Update stok buku
@@ -177,6 +187,8 @@ public function index(Request $request)
             $loan->book->increment('stock');
         }
 
-        return back()->with('success', 'Buku berhasil dikembalikan! Terima kasih.');
+        return back()->with('success', $telat ? 
+            'Buku berhasil dikembalikan (TERLAMBAT)!' : 
+            'Buku berhasil dikembalikan! Terima kasih.');
     }
 }

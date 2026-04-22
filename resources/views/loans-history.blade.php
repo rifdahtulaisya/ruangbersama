@@ -398,7 +398,6 @@
         @endif
     </script>
 
-    // SweetAlert untuk session messages
     @if (session('success'))
         <script>
             Swal.fire({

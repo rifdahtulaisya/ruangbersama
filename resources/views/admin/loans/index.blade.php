@@ -628,12 +628,12 @@
                     const loanName = form.getAttribute('data-name');
 
                     Swal.fire({
-                        title: "Tandai Dikembalikan?",
-                        text: `Buku "${loanName}" akan ditandai sebagai dikembalikan dan stok akan bertambah.`,
+                        title: "Yakin Dikonfirmasi?",
+                        text: `Buku "${loanName}" yang dipinjam.`,
                         icon: "question",
                         showCancelButton: true,
                         confirmButtonColor: "#3b82f6",
-                        cancelButtonColor: "#3085d6",
+                        cancelButtonColor: "#ef4444",
                         confirmButtonText: "Ya, kembalikan!",
                         cancelButtonText: "Batal"
                     }).then((result) => {
