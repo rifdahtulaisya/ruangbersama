@@ -12,9 +12,38 @@ use Carbon\Carbon;
 
 class UserLoanController extends Controller
 {
+    // Method baru untuk cek apakah user terkena sanksi
+    private function isUserBlocked()
+    {
+        $userId = Auth::id();
+        
+        // Cek apakah ada peminjaman yang terlambat dan belum dikembalikan
+        $now = Carbon::now('Asia/Jakarta')->toDateString();
+        
+        $hasLateReturn = Loan::where('id_users', $userId)
+            ->where('status', 'borrowed')
+            ->where('tgl_kembali_rencana', '<', $now)
+            ->exists();
+            
+        return $hasLateReturn;
+    }
+
     // Di UserLoanController.php, method index()
     public function index(Request $request)
     {
+        // Cek apakah user terkena blokir
+        if ($this->isUserBlocked()) {
+            // Ambil data buku yang terlambat untuk ditampilkan
+            $now = Carbon::now('Asia/Jakarta')->toDateString();
+            $lateBooks = Loan::with('book')
+                ->where('id_users', Auth::id())
+                ->where('status', 'borrowed')
+                ->where('tgl_kembali_rencana', '<', $now)
+                ->get();
+            
+            return view('loans-blocked', compact('lateBooks'));
+        }
+
         $search = $request->input('search');
         $categoryId = $request->input('category_id');
 
@@ -47,65 +76,71 @@ class UserLoanController extends Controller
     }
 
     public function store(Request $request)
-{
-    if (!Auth::check()) {
-        return redirect()->route('login')
-            ->with('error', 'Silakan login terlebih dahulu!');
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Silakan login terlebih dahulu!');
+        }
+
+        // Cek apakah user terkena blokir
+        if ($this->isUserBlocked()) {
+            return redirect()->route('loans')
+                ->with('error', 'Anda tidak bisa meminjam karena ada buku yang belum dikembalikan dan sudah melewati batas waktu pengembalian!');
+        }
+
+        $request->validate([
+            'id_books' => 'required|exists:books,id',
+            'tgl_pinjam' => 'required|date',
+            'tgl_kembali_rencana' => 'required|date|after:tgl_pinjam',
+        ]);
+
+        // --- LOGIKA TAMBAHAN: BATASI 7 HARI ---
+        $tglPinjam = Carbon::parse($request->tgl_pinjam);
+        $tglKembali = Carbon::parse($request->tgl_kembali_rencana);
+
+        // Hitung selisih hari
+        $durasi = $tglPinjam->diffInDays($tglKembali);
+
+        // Jika durasi lebih dari 7 hari
+        if ($durasi > 7) {
+            return back()
+                ->with('error', 'Maksimal durasi peminjaman adalah 7 hari!')
+                ->withInput();
+        }
+
+        // Cek ketersediaan buku
+        $book = Book::find($request->id_books);
+        if (!$book || $book->stock < 1) {
+            return back()->with('error', 'Stok buku tidak tersedia!')->withInput();
+        }
+
+        // Cek apakah buku sudah dipinjam di tanggal tersebut
+        $exists = Loan::where('id_books', $request->id_books)
+            ->whereNotIn('status', ['returned', 'cancelled'])
+            ->where(function ($q) use ($request) {
+                $q->where('tgl_pinjam', '<=', $request->tgl_kembali_rencana)
+                    ->where('tgl_kembali_rencana', '>=', $request->tgl_pinjam);
+            })
+            ->exists();
+
+        if ($exists) {
+            return back()
+                ->with('error', 'Buku sudah dipinjam di tanggal tersebut!')
+                ->withInput();
+        }
+
+        Loan::create([
+            'id_users' => Auth::id(),
+            'id_books' => $request->id_books,
+            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_kembali_rencana' => $request->tgl_kembali_rencana,
+            'status' => 'pending'
+        ]);
+
+        // Redirect ke halaman history dengan notifikasi sukses
+        return redirect()->route('loans.history')
+            ->with('success', 'Peminjaman buku berhasil diajukan!');
     }
-
-    $request->validate([
-        'id_books' => 'required|exists:books,id',
-        'tgl_pinjam' => 'required|date',
-        'tgl_kembali_rencana' => 'required|date|after:tgl_pinjam',
-    ]);
-
-    // --- LOGIKA TAMBAHAN: BATASI 7 HARI ---
-    $tglPinjam = Carbon::parse($request->tgl_pinjam);
-    $tglKembali = Carbon::parse($request->tgl_kembali_rencana);
-
-    // Hitung selisih hari
-    $durasi = $tglPinjam->diffInDays($tglKembali);
-
-    // Jika durasi lebih dari 7 hari
-    if ($durasi > 7) {
-        return back()
-            ->with('error', 'Maksimal durasi peminjaman adalah 7 hari!')
-            ->withInput();
-    }
-
-    // Cek ketersediaan buku
-    $book = Book::find($request->id_books);
-    if (!$book || $book->stock < 1) {
-        return back()->with('error', 'Stok buku tidak tersedia!')->withInput();
-    }
-
-    // Cek apakah buku sudah dipinjam di tanggal tersebut
-    $exists = Loan::where('id_books', $request->id_books)
-        ->whereNotIn('status', ['returned', 'cancelled'])
-        ->where(function ($q) use ($request) {
-            $q->where('tgl_pinjam', '<=', $request->tgl_kembali_rencana)
-                ->where('tgl_kembali_rencana', '>=', $request->tgl_pinjam);
-        })
-        ->exists();
-
-    if ($exists) {
-        return back()
-            ->with('error', 'Buku sudah dipinjam di tanggal tersebut!')
-            ->withInput();
-    }
-
-    Loan::create([
-        'id_users' => Auth::id(),
-        'id_books' => $request->id_books,
-        'tgl_pinjam' => $request->tgl_pinjam,
-        'tgl_kembali_rencana' => $request->tgl_kembali_rencana,
-        'status' => 'pending'
-    ]);
-
-    // Redirect ke halaman history dengan notifikasi sukses
-    return redirect()->route('loans.history')
-        ->with('success', 'Peminjaman buku berhasil diajukan!');
-}
 
     public function show($id)
     {
@@ -198,7 +233,7 @@ class UserLoanController extends Controller
         }
 
         return back()->with('success', $telat ?
-            'Buku berhasil dikembalikan (TERLAMBAT)!' :
+            'Buku berhasil dikembalikan (TERLAMBAT)! Sekarang Anda bisa meminjam kembali.' :
             'Buku berhasil dikembalikan! Terima kasih.');
     }
 }

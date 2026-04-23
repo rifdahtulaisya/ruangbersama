@@ -1,8 +1,29 @@
 @extends('layouts-user.user')
 
-@section('title', 'DAFTAR RUANGAN')
+@section('title', 'PEMINJAMAN BUKU')
 
 @section('content')
+{{-- Cek jika user diblokir, redirect ke halaman block --}}
+    @php
+        use Carbon\Carbon;
+        $now = Carbon::now('Asia/Jakarta')->toDateString();
+        $hasLateReturn = App\Models\Loan::where('id_users', Auth::id())
+            ->where('status', 'borrowed')
+            ->where('tgl_kembali_rencana', '<', $now)
+            ->exists();
+    @endphp
+
+    @if($hasLateReturn)
+        <div class="bg-red-50 border-l-4 border-red-500 rounded-xl p-4 mb-6">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                <div>
+                    <p class="text-red-700 font-medium">Anda tidak bisa melakukan peminjaman!</p>
+                    <p class="text-red-600 text-sm">Ada buku yang belum dikembalikan dan melewati batas waktu. Silakan kembalikan buku terlebih dahulu.</p>
+                </div>
+            </div>
+        </div>
+    @endif
     <div class="space-y-8 animate-slide-in">
 
         <div class="bg-white rounded-2xl shadow-lg p-6">
