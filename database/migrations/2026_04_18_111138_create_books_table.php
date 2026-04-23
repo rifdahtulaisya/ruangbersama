@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('author');
             $table->string('image', 255)->nullable();
             $table->integer('stock')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -40,13 +40,7 @@
                md:ml-[320px] md:mr-3 transition-all duration-300">
 
         <div>
-            © {{ date('Y') }} RuangPinjam reserved.
-        </div>
-
-        <div class="flex gap-4">
-            <span>Version 1.0</span>
-            <span>•</span>
-            <span>Admin Panel</span>
+            © {{ date('Y') }} RuangBersama reserved.
         </div>
 
     </footer>

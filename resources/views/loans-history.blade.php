@@ -61,7 +61,6 @@
                         <th class="px-6 py-4">Rencana Kembali</th>
                         <th class="px-6 py-4">Tanggal Kembali</th>
                         <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-stone-100">
@@ -138,29 +137,6 @@
                                     {{ $statusText }}
                                 </span>
                             </td>
-
-                            <td class="px-6 py-4 text-center">
-                                @if ($item->status == 'borrowed')
-                                    <button type="button" onclick="confirmReturn({{ $item->id }})"
-                                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg 
-                   bg-blue-100 text-blue-700 hover:bg-blue-200 
-                   transition-all duration-200 text-sm font-medium">
-                                        <i class="fa-solid fa-rotate-left text-xs"></i>
-                                        Kembalikan
-                                    </button>
-                                @elseif($item->status == 'pending')
-                                    <button type="button"
-                                        onclick="confirmDelete({{ $item->id }}, '{{ addslashes($item->book->title ?? 'Buku') }}')"
-                                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg 
-                   bg-red-100 text-red-700 hover:bg-red-200 
-                   transition-all duration-200 text-sm font-medium">
-                                        <i class="fa-solid fa-trash text-xs"></i>
-                                        Batalkan
-                                    </button>
-                                @else
-                                    <span class="text-stone-400 text-sm">-</span>
-                                @endif
-                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -214,159 +190,7 @@
                     filterForm.submit();
                 });
             }
-
-            // Untuk klik card statistik (desktop)
-            const statusCards = document.querySelectorAll('.status-filter');
-            statusCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    const status = this.getAttribute('data-status');
-                    if (statusFilter) {
-                        statusFilter.value = status;
-                        filterForm.submit();
-                    }
-                });
-            });
-
-            // Mobile dropdown stats
-            const statsDropdown = document.getElementById('statsDropdown');
-            const statsContent = document.getElementById('statsContent');
-
-            if (statsDropdown && statsContent) {
-                const stats = {
-                    total: {{ $stats['total'] ?? 0 }},
-                    pending: {{ $stats['pending'] ?? 0 }},
-                    borrowed: {{ $stats['borrowed'] ?? 0 }},
-                    returned: {{ $stats['returned'] ?? 0 }},
-                    cancelled: {{ $stats['cancelled'] ?? 0 }},
-                };
-
-                statsDropdown.addEventListener('change', function() {
-                    const value = this.value;
-                    let displayText = '';
-
-                    switch (value) {
-                        case 'pending':
-                            displayText = 'Pending';
-                            break;
-                        case 'borrowed':
-                            displayText = 'Dipinjam';
-                            break;
-                        case 'returned':
-                            displayText = 'Dikembalikan';
-                            break;
-                        case 'cancelled':
-                            displayText = 'Dibatalkan';
-                            break;
-                        default:
-                            displayText = 'Semua Status';
-                    }
-
-                    statsContent.innerHTML = `
-                    <p class="text-xs text-stone-500 uppercase font-semibold">${displayText}</p>
-                    <h2 class="text-2xl font-bold text-[#280905]">${stats[value] || stats.total}</h2>
-                `;
-                });
-            }
         });
-
-        // Fungsi konfirmasi pengembalian buku
-        function confirmReturn(loanId) {
-            Swal.fire({
-                title: "Konfirmasi Pengembalian",
-                text: "Apakah Anda yakin ingin mengembalikan buku ini?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, Kembalikan!",
-                cancelButtonText: "Batal"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = `/loans/${loanId}/return`;
-
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-
-                    form.appendChild(csrfToken);
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
-
-        // Fungsi konfirmasi HAPUS data (bukan cancel status)
-        function confirmDelete(loanId, bookTitle) {
-            Swal.fire({
-                title: "Batalkan Peminjaman?",
-                html: `Apakah Anda yakin ingin membatalkan peminjaman buku <strong>"${bookTitle}"</strong>?`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Ya, Batalkan!",
-                cancelButtonText: "Batal"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = `/loans/${loanId}/cancel`;
-
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-
-                    const methodField = document.createElement('input');
-                    methodField.type = 'hidden';
-                    methodField.name = '_method';
-                    methodField.value = 'DELETE';
-
-                    form.appendChild(csrfToken);
-                    form.appendChild(methodField);
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
-
-        // Fungsi konfirmasi pembatalan
-        function confirmCancel(loanId) {
-            Swal.fire({
-                title: "Konfirmasi Pembatalan",
-                text: "Apakah Anda yakin ingin membatalkan peminjaman ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Ya, Batalkan!",
-                cancelButtonText: "Kembali"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = `{{ url('loans') }}/${loanId}/cancel`;
-
-                    const csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-
-                    const methodField = document.createElement('input');
-                    methodField.type = 'hidden';
-                    methodField.name = '_method';
-                    methodField.value = 'PATCH';
-
-                    form.appendChild(csrfToken);
-                    form.appendChild(methodField);
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        }
     </script>
 
     <script>

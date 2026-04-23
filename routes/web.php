@@ -26,7 +26,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/loans/history', [UserLoanController::class, 'history'])->name('loans.history');
     Route::get('/loans/{id}', [UserLoanController::class, 'show'])->name('loans.show');
     Route::delete('/loans/{id}/cancel', [UserLoanController::class, 'destroy'])->name('loans.cancel');
-    Route::post('/loans/{id}/return', [UserLoanController::class, 'returnBook'])->name('loans.return');
 
     // Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {

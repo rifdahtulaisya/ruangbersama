@@ -3,11 +3,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
+    use SoftDeletes;
     protected $fillable = ['category_id', 'title', 'author', 'image', 'stock'];
+    protected $dates = ['deleted_at'];
 
     // Book N - 1 Category
     public function category()

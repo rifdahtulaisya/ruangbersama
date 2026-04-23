@@ -21,9 +21,11 @@ class BookController extends Controller
         // Search functionality
         $search = $request->input('search');
 
-        $books = Book::with('category')->when($search, function ($query, $search) {
+        $books = Book::with('category')
+        ->when($search, function ($query, $search) {
             return $query->where('title', 'like', '%' . $search . '%');
-        })->paginate($perPage);
+        })
+        ->paginate($perPage);
 
         return view('admin.books.index', compact('books'));
     }
@@ -126,11 +128,22 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        $book = Book::findOrFail($id);
-        $book->delete();
-
-        return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
+  public function destroy(string $id)
+{
+    $book = Book::findOrFail($id);
+    
+    // Hapus semua riwayat peminjaman buku ini terlebih dahulu
+    $book->loans()->delete();
+    
+    // Hapus image jika ada
+    if ($book->image && Storage::exists('public/' . $book->image)) {
+        Storage::delete('public/' . $book->image);
     }
+    
+    // Soft delete buku
+    $book->delete();
+    
+    return redirect()->route('admin.books.index')
+        ->with('success', 'Book and its loan history deleted successfully.');
+}
 }

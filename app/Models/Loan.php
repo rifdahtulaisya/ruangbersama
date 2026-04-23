@@ -16,13 +16,15 @@ class Loan extends Model
         'tgl_kembali_rencana',
         'tgl_kembali_realisasi',
         'status',
-        'teguran'
+        'teguran',
+        'returned_at'
     ];
 
     protected $casts = [
         'tgl_pinjam' => 'date',
         'tgl_kembali_rencana' => 'date',
         'tgl_kembali_realisasi' => 'date',
+        'returned_at' => 'date',
     ];
 
     public function user()
@@ -33,6 +35,11 @@ class Loan extends Model
     public function book()
     {
         return $this->belongsTo(Book::class, 'id_books');
+    }
+
+     public function isReturned()
+    {
+        return !is_null($this->returned_at);
     }
 
     // Status constants
