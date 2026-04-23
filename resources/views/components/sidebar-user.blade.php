@@ -18,7 +18,7 @@
             </div>
             <div class="flex flex-col">
                 <span class="text-xl font-bold text-amber-100 tracking-wide">
-                    RuangBersama
+                    RuangBuku
                 </span>
                 <span class="text-xs text-amber-100/60 font-medium">
                     Pengguna
@@ -74,7 +74,7 @@
 
     <div class="px-6 pb-6 space-y-3">
         
-         <a href=""
+         <a href="{{ route('profile') }}"
 
            class="block bg-[#A27B5C]/5 backdrop-blur-sm rounded-xl p-4 border border-[#A27B5C]/20 shadow-sm
 
@@ -122,7 +122,7 @@
 
                         <span class="px-2 py-0.5 bg-[#A27B5C]/20 text-[#A27B5C] rounded-full text-[10px] font-medium">
 
-                            <i class="fa-solid fa-shield-alt mr-1"></i>Peminjam
+                            <i class="fa-solid fa-shield-alt mr-1"></i>Siswa
 
                         </span>
 

@@ -148,18 +148,12 @@
                         <div class="mt-3 flex flex-wrap items-center gap-2">
                             <span class="text-xs px-2 py-1 rounded-full bg-stone-100 text-stone-600">
                                 <i class="fa-solid fa-layer-group mr-1"></i>
-                                {{ $loan->book->category->name ?? 'Tidak ada kategori' }}
+                                {{ $loan->book->category->category_name ?? 'Tidak ada kategori' }}
                             </span>
                             <span class="text-xs px-2 py-1 rounded-full bg-stone-100 text-stone-600">
                                 <i class="fa-solid fa-copy mr-1"></i>
                                 Stok: {{ $loan->book->stock ?? 0 }}
                             </span>
-                            @if(($loan->book->stock ?? 0) <= 3 && ($loan->book->stock ?? 0) > 0)
-                                <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-600">
-                                    <i class="fa-solid fa-exclamation-triangle mr-1"></i>
-                                    Stok Terbatas
-                                </span>
-                            @endif
                             @if(($loan->book->stock ?? 0) == 0)
                                 <span class="text-xs px-2 py-1 rounded-full bg-red-100 text-red-600">
                                     <i class="fa-solid fa-ban mr-1"></i>

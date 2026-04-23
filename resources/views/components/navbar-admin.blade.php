@@ -33,7 +33,7 @@
             <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-blue-500 rounded-full border-2 border-white"></span>
         </button>
 
-        <a href="{{ route('admin.profile') }}" 
+        <a
            class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200 hover:bg-slate-100 transition">
             <img src="{{ asset('profile.svg') }}"
                  class="w-8 h-8 rounded-full object-cover border border-slate-300"

@@ -3,11 +3,11 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\LoanController;
-use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\MemberController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\UserLoanController;
-use App\Http\Controllers\UserDashboardController; 
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +26,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/loans/history', [UserLoanController::class, 'history'])->name('loans.history');
     Route::get('/loans/{id}', [UserLoanController::class, 'show'])->name('loans.show');
     Route::delete('/loans/{id}/cancel', [UserLoanController::class, 'destroy'])->name('loans.cancel');
+
+    // Profile
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::put('profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.change-password');
 
     // Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -46,12 +52,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('members/export-pdf', [MemberController::class, 'exportPDF'])->name('members.export-pdf');
         Route::get('members/export-csv', [MemberController::class, 'export'])->name('members.export-csv');
         Route::resource('members', MemberController::class);
-
-        // Profile
-        Route::get('profile', [ProfileController::class, 'edit'])->name('profile');
-        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-        Route::put('profile/change-password', [ProfileController::class, 'updatePassword'])->name('profile.change-password');
     });
 });
 

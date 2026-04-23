@@ -10,7 +10,7 @@
         <div class="flex items-center gap-4">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold text-slate-800">
-                    Selamat Datang, <span class="text-amber-700">{{ Auth::user()->name ?? 'User' }}</span>!
+                    Selamat Datang, <span class="text-amber-700">{{ Auth::user()->name ?? 'User' }}</span>
                 </h1>
                 <p class="text-slate-500 mt-1 flex items-center gap-2">
                     <i class="fa-regular fa-calendar-alt text-sm"></i>

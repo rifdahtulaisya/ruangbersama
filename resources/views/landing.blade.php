@@ -1,7 +1,7 @@
 <html lang="en">
 
 <head>
-    <title>RuangBersama</title>
+    <title>RuangBuku</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -91,11 +91,10 @@
                     <div class="container mx-auto px-4 relative">
                         <div class="max-w-lg xl:max-w-xl mx-auto text-center">
                             <h1 class="font-heading text-5xl xs:text-7xl xl:text-8xl tracking-tight text-white mb-8">
-                                RuangBersama
+                                RuangBuku
                             </h1>
                             <p class="max-w-md xl:max-w-none text-lg text-white opacity-80 mb-10">
-                                Solusi cerdas sewa ruangan untuk diskusi, kolaborasi, dan produktivitas tanpa batas.
-                                Temukan ruang yang tepat, kapan pun Anda butuh.
+                                Akses mudah koleksi pustaka untuk wawasan luas dan produktivitas tanpa batas. Pinjam buku pilihan Anda, di mana pun dan kapan pun.
                             </p>
 
                             <a class="inline-flex py-4 px-6 items-center justify-center text-lg font-medium bg-white text-[#280905] border border-white rounded-full transition duration-200"
@@ -114,7 +113,7 @@
                     </div>
                     <nav class="relative flex flex-col py-7 px-10 w-full h-full bg-white overflow-y-auto">
                         <div class="flex items-center justify-between"><a class="inline-block" href="#!"><img
-                                    class="h-8" src="fauna-assets/logos/sign-logo-flow.svg" alt="" /></a>
+                                    class="h-8" src="{{ asset('logo.svg') }}" alt="" /></a>
                             <div class="flex items-center">
                                 @auth
                                     <a class="inline-flex py-2.5 px-4 mr-6 items-center justify-center text-sm font-medium text-teal-900 hover:text-white border border-teal-900 hover:bg-teal-900 rounded-full transition duration-200"
@@ -207,7 +206,7 @@
                                 data-height="24"></span>
                         </a>
                     </div>
-                    <p class="text-sm text-gray-500 mb-3">© 2026 RuangBersama. All rights reserved.</p>
+                    <p class="text-sm text-gray-500 mb-3">© 2026 RuangBuku. All rights reserved.</p>
                 </div>
             </div>
         </section>

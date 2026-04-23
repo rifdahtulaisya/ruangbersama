@@ -16,15 +16,15 @@ class UserLoanController extends Controller
     private function isUserBlocked()
     {
         $userId = Auth::id();
-        
+
         // Cek apakah ada peminjaman yang terlambat dan belum dikembalikan
         $now = Carbon::now('Asia/Jakarta')->toDateString();
-        
+
         $hasLateReturn = Loan::where('id_users', $userId)
             ->where('status', 'borrowed')
             ->where('tgl_kembali_rencana', '<', $now)
             ->exists();
-            
+
         return $hasLateReturn;
     }
 
@@ -40,22 +40,24 @@ class UserLoanController extends Controller
                 ->where('status', 'borrowed')
                 ->where('tgl_kembali_rencana', '<', $now)
                 ->get();
-            
+
             return view('loans-blocked', compact('lateBooks'));
         }
 
         $search = $request->input('search');
         $categoryId = $request->input('category_id');
 
+
         $query = Book::with('category');
 
-        // Ambil semua buku yang sedang dipinjam (status pending atau borrowed) oleh user yang sedang login
+        // Tambahkan kondisi where('stock', '>', 0) di sini
+        $query = Book::with('category')->where('stock', '>', 0);
+
         $borrowedBookIds = Loan::where('id_users', Auth::id())
             ->whereIn('status', ['pending', 'borrowed'])
             ->pluck('id_books')
             ->toArray();
 
-        // Hanya tampilkan buku yang tidak sedang dipinjam oleh user
         $query->whereNotIn('id', $borrowedBookIds);
 
         if ($search) {
@@ -181,5 +183,4 @@ class UserLoanController extends Controller
 
         return view('loans-history', compact('loans', 'stats'));
     }
-
 }

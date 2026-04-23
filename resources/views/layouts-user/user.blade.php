@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard | RuangBersama</title>
+    <title>Dashboard | RuangBuku</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -45,7 +45,7 @@
 
 
         <div>
-            © {{ date('Y') }} RuangBersama. All rights reserved.
+            © {{ date('Y') }} RuangBuku. All rights reserved.
         </div>
 
     </footer>
@@ -55,38 +55,48 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const ctx = document.getElementById('chartPeminjaman');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Jumlah Peminjaman',
-                    data: [12, 19, 10, 15, 22, 18, 25],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59,130,246,0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#3b82f6'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvasElement = document.getElementById('chartPeminjaman');
+        
+        // Only create chart if the canvas element exists on this page
+        if (canvasElement && typeof Chart !== 'undefined') {
+            try {
+                new Chart(canvasElement, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'Jumlah Peminjaman',
+                            data: [12, 19, 10, 15, 22, 18, 25],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59,130,246,0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                });
+            } catch (error) {
+                console.error('Failed to create chart:', error);
             }
-        });
-    </script>
+        }
+    });
+</script>
 
 
 

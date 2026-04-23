@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Login | RuangBersama')
+@section('title', 'Login | RuangBuku')
 
 @section('content')
     <div class="max-w-lg mx-auto">
         <div class="text-center mb-10">
             <h1 class="font-heading text-5xl sm:text-6xl md:text-7xl tracking-sm mb-6 font-bold text-[#280905]">
                 Login</h1>
-            <p class="text-gray-600">Akses akun RuangBersama Anda</p>
+            <p class="text-gray-600">Akses akun RuangBuku Anda</p>
         </div>
         <div class="p-6 md:p-8 bg-white rounded-2xl shadow-xl border border-gray-100">
             <form action="{{ route('login') }}" method="POST">

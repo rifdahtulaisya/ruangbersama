@@ -5,7 +5,7 @@
     <title>@yield('title', '')</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+    
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
         rel="stylesheet" />

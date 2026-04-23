@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Admin | RuangBersama</title>
+    <title>Admin | RuangBuku</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo.svg') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -40,7 +40,7 @@
                md:ml-[320px] md:mr-3 transition-all duration-300">
 
         <div>
-            © {{ date('Y') }} RuangBersama reserved.
+            © {{ date('Y') }} RuangBuku reserved.
         </div>
 
     </footer>
@@ -51,64 +51,38 @@
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('fotoInput');
 
-            input.addEventListener('change', function() {
-                const file = this.files[0];
-                if (!file) return;
+            // Check if the element exists before using it
+            if (input) {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (!file) return;
 
-                const previewContainer = document.getElementById('previewContainer');
+                    const previewContainer = document.getElementById('previewContainer');
 
-                // RESET TOTAL
-                previewContainer.innerHTML = '';
+                    if (!previewContainer) return;
 
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.className = 'w-full h-full object-cover';
+                    // RESET TOTAL
+                    previewContainer.innerHTML = '';
 
-                previewContainer.appendChild(img);
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.className = 'w-full h-full object-cover';
 
-                document.getElementById('uploadBtnText').textContent = 'Ganti Foto';
+                    previewContainer.appendChild(img);
 
-                const hapusFoto = document.getElementById('hapus_foto');
-                if (hapusFoto) hapusFoto.checked = false;
-            });
-        });
-    </script>
-    <script>
-        const ctx = document.getElementById('chartPeminjaman');
+                    const uploadBtnText = document.getElementById('uploadBtnText');
+                    if (uploadBtnText) uploadBtnText.textContent = 'Ganti Foto';
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Jumlah Peminjaman',
-                    data: [12, 19, 10, 15, 22, 18, 25],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'rgba(59,130,246,0.1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#3b82f6'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
+                    const hapusFoto = document.getElementById('hapus_foto');
+                    if (hapusFoto) hapusFoto.checked = false;
+                });
             }
         });
     </script>
+    
 
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         function confirmLogout() {

@@ -15,7 +15,7 @@
             </div>
             <div class="flex flex-col">
                 <span class="text-xl font-bold text-white tracking-wide">
-                    RuangBersama
+                    RuangBuku
                 </span>
                 <span class="text-xs text-slate-400 font-medium">
                     Administrator
