@@ -157,7 +157,7 @@
                             @if ($i >= $categories->currentPage() - 1 && $i <= $categories->currentPage() + 1)
                                 <a href="{{ $categories->url($i) }}"
                                     class="px-3 py-1.5 min-w-[40px] text-center rounded-lg transition 
-                                  {{ $i == $categories->currentPage() ? 'bg-sky-500 text-white shadow-md shadow-sky-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                                  {{ $i == $categories->currentPage() ? 'bg-sky-500 text-white shadow-md shadow-sky-200' : 'bg-sky-100 text-stone-600 hover:bg-sky-200' }}">
                                     {{ $i }}
                                 </a>
                             @endif

@@ -16,7 +16,6 @@ class Loan extends Model
         'tgl_kembali_rencana',
         'tgl_kembali_realisasi',
         'status',
-        'teguran',
         'returned_at'
     ];
 

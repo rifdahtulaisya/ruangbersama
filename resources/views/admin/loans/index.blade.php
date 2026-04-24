@@ -474,7 +474,7 @@
                             </span>
                         @else
                             <a href="{{ $loans->previousPageUrl() . (request('search') ? '&search=' . request('search') : '') . (request('per_page') ? '&per_page=' . request('per_page') : '') . (request('status') ? '&status=' . request('status') : '') . (request('tanggal') ? '&tanggal=' . request('tanggal') : '') }}"
-                                class="px-3 py-1.5 rounded-lg bg-[#A27B5C]/10 text-[#A27B5C] hover:bg-[#A27B5C]/20 transition">
+                                class="px-3 py-1.5 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </a>
                         @endif
@@ -503,7 +503,7 @@
                         @for ($i = $start; $i <= $end; $i++)
                             <a href="{{ $loans->url($i) . (request('search') ? '&search=' . request('search') : '') . (request('per_page') ? '&per_page=' . request('per_page') : '') . (request('status') ? '&status=' . request('status') : '') . (request('tanggal') ? '&tanggal=' . request('tanggal') : '') }}"
                                 class="px-3 py-1.5 min-w-[40px] text-center rounded-lg transition 
-                              {{ $i == $current ? 'bg-[#280905] text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200' }}">
+                              {{ $i == $current ? 'bg-sky-500 text-white' : 'bg-sky-100 text-stone-600 hover:bg-sky-200' }}">
                                 {{ $i }}
                             </a>
                         @endfor
@@ -511,7 +511,7 @@
                         <!-- Next Button -->
                         @if ($loans->hasMorePages())
                             <a href="{{ $loans->nextPageUrl() . (request('search') ? '&search=' . request('search') : '') . (request('per_page') ? '&per_page=' . request('per_page') : '') . (request('status') ? '&status=' . request('status') : '') . (request('tanggal') ? '&tanggal=' . request('tanggal') : '') }}"
-                                class="px-3 py-1.5 rounded-lg bg-[#A27B5C]/10 text-[#A27B5C] hover:bg-[#A27B5C]/20 transition">
+                                class="px-3 py-1.5 rounded-lg bg-sky-50 text-sky-600 hover:bg-sky-100 transition">
                                 <i class="fa-solid fa-chevron-right"></i>
                             </a>
                         @else

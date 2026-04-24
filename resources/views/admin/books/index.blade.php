@@ -1,6 +1,6 @@
 @extends('layouts-admin.admin')
 
-@section('title', 'BOOK')
+@section('title', 'BUKU')
 
 @section('content')
 
@@ -169,7 +169,7 @@
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-slate-500">
-                        Menampilkan <span class="font-bold text-slate-700">{{ $books->firstItem() }}</span> - <span
+                        Menadfsdf <span class="font-bold text-slate-700">{{ $books->firstItem() }}</span> - <span
                             class="font-bold text-slate-700">{{ $books->lastItem() }}</span> dari <span
                             class="font-bold text-slate-700">{{ $books->total() }}</span> data
                     </div>

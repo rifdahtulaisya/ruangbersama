@@ -165,7 +165,7 @@
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl animate-slide-up">
             <div class="p-6 border-b border-slate-200">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-bold text-slate-800">Formulir Peminjaman Ruangan</h3>
+                    <h3 class="text-xl font-bold text-slate-800">Formulir Peminjaman Buku</h3>
                     <button onclick="closePinjamModal()" class="text-slate-400 hover:text-slate-600">
                         <i class="fas fa-times text-xl"></i>
                     </button>

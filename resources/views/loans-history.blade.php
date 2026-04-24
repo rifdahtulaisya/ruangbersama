@@ -1,6 +1,6 @@
 @extends('layouts-user.user')
 
-@section('title', 'Riwayat Peminjaman')
+@section('title', 'RIWAYAT PEMINJAMAN')
 
 @section('content')
     <!-- FILTER DROPDOWN (menggantikan search box) -->
