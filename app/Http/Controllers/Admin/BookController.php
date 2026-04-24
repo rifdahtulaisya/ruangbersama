@@ -15,10 +15,8 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        // Pagination - default 5 items per page
         $perPage = $request->input('per_page', 5);
 
-        // Search functionality
         $search = $request->input('search');
 
         $books = Book::with('category')
@@ -29,6 +27,7 @@ class BookController extends Controller
 
         return view('admin.books.index', compact('books'));
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -101,7 +100,6 @@ class BookController extends Controller
         $book->author = $request->author;
         $book->stock = $request->stock;
 
-        // Handle image removal
         if ($request->remove_image == '1') {
             if ($book->image && Storage::exists('public/' . $book->image)) {
                 Storage::delete('public/' . $book->image);
@@ -109,9 +107,7 @@ class BookController extends Controller
             $book->image = null;
         }
 
-        // Handle new image upload
         if ($request->hasFile('image')) {
-            // Delete old image if exists
             if ($book->image && Storage::exists('public/' . $book->image)) {
                 Storage::delete('public/' . $book->image);
             }
@@ -132,15 +128,12 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
 
-        // Hapus semua riwayat peminjaman buku ini terlebih dahulu
         $book->loans()->delete();
 
-        // Hapus image jika ada
         if ($book->image && Storage::exists('public/' . $book->image)) {
             Storage::delete('public/' . $book->image);
         }
 
-        // Soft delete buku
         $book->delete();
 
         return redirect()->route('admin.books.index')

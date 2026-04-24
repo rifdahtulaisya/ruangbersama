@@ -52,10 +52,8 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Coba login dengan username atau email (jika ingin fleksibel)
         $credentials = $this->only('username', 'password');
         
-        // Opsi 1: Login hanya dengan username
         if (! Auth::attempt(['username' => $this->username, 'password' => $this->password], $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 

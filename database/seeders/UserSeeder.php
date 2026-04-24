@@ -14,7 +14,6 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Membuat 10 user dengan role 'user'
         $users = [
             [
                 'username' => 'rifdah',
@@ -55,6 +54,14 @@ class UserSeeder extends Seeder
                 'role' => 'user',
                 'email' => 'ramdona@example.com',
                 'password' => Hash::make('ramdona123'),
+            ],
+            [
+                'username' => 'rennebie',
+                'name' => 'Lee Rennebie',
+                'number' => '20240006',
+                'role' => 'user',
+                'email' => 'rennebie@example.com',
+                'password' => Hash::make('rennebie123'),
             ],
         ];
 

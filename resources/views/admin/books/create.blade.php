@@ -3,10 +3,9 @@
 @section('title', 'BOOK')
 
 @section('content')
-    <!-- HEADER BOX -->
+
     <div class="bg-white rounded-xl shadow p-5 mb-6">
         <div class="flex items-center gap-4">
-            <!-- BACK BUTTON -->
             <a href="{{ route('admin.books.index') }}"
                 class="w-10 h-10 flex items-center justify-center rounded-lg
                   bg-sky-50 text-sky-600 hover:bg-sky-100 transition">
@@ -19,7 +18,6 @@
         </div>
     </div>
 
-    <!-- ALERT MESSAGE -->
     @if (session('success'))
         <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
             <div class="flex items-center justify-between">
@@ -35,14 +33,11 @@
         </div>
     @endif
 
-    <!-- FORM CARD -->
     <div class="flex flex-col lg:flex-row gap-6">
-        <!-- FORM SECTION -->
         <div class="bg-white rounded-xl shadow p-6 flex-1">
             <form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                {{-- Error global --}}
                 @if ($errors->any())
                     <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                         <ul class="list-disc list-inside space-y-1">
@@ -53,7 +48,6 @@
                     </div>
                 @endif
 
-                <!-- CATEGORY FIELD -->
                 <div class="mb-5">
                     <label for="category_id" class="block text-sm font-medium text-slate-700 mb-2">
                         Kategori <span class="text-red-500">*</span>
@@ -74,7 +68,6 @@
                     @enderror
                 </div>
 
-                <!-- BOOK TITLE FIELD -->
                 <div class="mb-5">
                     <label for="title" class="block text-sm font-medium text-slate-700 mb-2">
                         Judul Buku <span class="text-red-500">*</span>
@@ -89,7 +82,6 @@
                     @enderror
                 </div>
 
-                <!-- AUTHOR FIELD -->
                 <div class="mb-5">
                     <label for="author" class="block text-sm font-medium text-slate-700 mb-2">
                         Penulis <span class="text-red-500">*</span>
@@ -104,7 +96,6 @@
                     @enderror
                 </div>
 
-                <!-- STOCK FIELD -->
                 <div class="mb-5">
                     <label for="stock" class="block text-sm font-medium text-slate-700 mb-2">
                         Stok Buku <span class="text-red-500">*</span>
@@ -119,7 +110,6 @@
                     @enderror
                 </div>
 
-                <!-- IMAGE FIELD -->
                 <div class="mb-6">
                     <label for="image" class="block text-sm font-medium text-slate-700 mb-2">
                         Gambar (Opsional)
@@ -144,7 +134,6 @@
                     @enderror
                 </div>
 
-                <!-- BUTTON SUBMIT -->
                 <div class="flex justify-end gap-3 pt-6 border-t border-stone-100">
                     <button type="submit"
                         class="px-5 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white
@@ -155,11 +144,9 @@
             </form>
         </div>
 
-        <!-- INFO SECTION -->
         <div class="hidden lg:flex w-full lg:w-1/3 xl:w-1/4 flex-col items-center justify-center">
             <div class="bg-white rounded-xl shadow p-8 w-full h-full flex flex-col items-center justify-center">
 
-                <!-- Illustration -->
                 <div class="mb-6">
                     <div
                         class="w-40 h-40 mx-auto bg-gradient-to-br from-sky-100 to-sky-50 
@@ -168,7 +155,6 @@
                     </div>
                 </div>
 
-                <!-- Informasi -->
                 <div class="text-center">
                     <h3 class="text-lg font-semibold text-sky-700 mb-2">Tambah Buku</h3>
 
@@ -176,7 +162,6 @@
                         Isi data buku dengan lengkap agar mudah dikelola dan ditemukan.
                     </p>
 
-                    <!-- Tips Box -->
                     <div class="mt-5 p-3 bg-[#A27B5C]/10 rounded-lg border border-[#A27B5C]/20">
                         <ul class="text-xs text-stone-600 space-y-1 text-left">
                             <li>• Pilih kategori yang sesuai</li>

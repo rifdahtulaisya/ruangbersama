@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            // Hapus kolom teguran jika ada
             if (Schema::hasColumn('loans', 'teguran')) {
                 $table->dropColumn('teguran');
             }
@@ -25,7 +24,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('loans', function (Blueprint $table) {
-            // Tambahkan kembali kolom teguran jika rollback
             $table->string('teguran')->nullable()->after('status');
         });
     }

@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/Admin/LoanController.php
 
 namespace App\Http\Controllers\Admin;
 
@@ -24,17 +23,14 @@ class LoanController extends Controller
 
         $query = Loan::with(['user', 'book']);
 
-        // Filter by status (tanpa 'approved')
         if ($statusFilter && $statusFilter != 'all' && in_array($statusFilter, ['pending', 'borrowed', 'returned', 'cancelled'])) {
             $query->where('status', $statusFilter);
         }
 
-        // Filter by date (tgl_pinjam)
         if ($tanggalFilter) {
             $query->whereDate('tgl_pinjam', $tanggalFilter);
         }
 
-        // Filter search
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->whereHas('user', function ($studentQuery) use ($search) {
@@ -46,8 +42,7 @@ class LoanController extends Controller
         }
 
         $loans = $query->orderBy('created_at', 'desc')->paginate($perPage);
-        
-        // Calculate stats (without filters)
+
         $stats = [
             'total' => Loan::count(),
             'pending' => Loan::where('status', 'pending')->count(),
@@ -59,18 +54,16 @@ class LoanController extends Controller
     }
 
     /**
- * Show the form for creating a new resource.
- */
-public function create()
-{
-    // Hanya ambil user dengan role 'user'
-    $users = User::where('role', 'user')->get();
-    
-    // Hanya ambil buku dengan stok > 0
-    $books = Book::where('stock', '>', 0)->get();
-    
-    return view('admin.loans.create', compact('users', 'books'));
-}
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $users = User::where('role', 'user')->get();
+
+        $books = Book::where('stock', '>', 0)->get();
+
+        return view('admin.loans.create', compact('users', 'books'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -85,7 +78,6 @@ public function create()
             'status' => 'required|in:pending,borrowed,returned,cancelled'
         ]);
 
-        // Jika status langsung borrowed, cek stok
         if ($request->status == 'borrowed') {
             $book = Book::findOrFail($request->id_books);
             if ($book->stock < 1) {
@@ -105,15 +97,14 @@ public function create()
     /**
      * Display the specified resource.
      */
-   public function show($id)
-{
-    $loan = Loan::with(['user', 'book.category'])->findOrFail($id);
-    
-    // Store current page to return after action
-    session(['loans_page' => request()->input('page', 1)]);
-    
-    return view('admin.loans.show', compact('loan'));
-}
+    public function show($id)
+    {
+        $loan = Loan::with(['user', 'book.category'])->findOrFail($id);
+
+        session(['loans_page' => request()->input('page', 1)]);
+
+        return view('admin.loans.show', compact('loan'));
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -148,9 +139,7 @@ public function create()
         DB::beginTransaction();
 
         try {
-            // Handle status change logic
             if ($oldStatus != $newStatus) {
-                // Jika dari pending/returned menjadi borrowed
                 if ($newStatus == 'borrowed' && $oldStatus != 'borrowed') {
                     $book = Book::findOrFail($request->id_books);
                     if ($book->stock < 1) {
@@ -158,14 +147,12 @@ public function create()
                     }
                     $book->decrementStock();
                 }
-                
-                // Jika dari borrowed menjadi returned
+
                 if ($newStatus == 'returned' && $oldStatus == 'borrowed') {
                     $book = Book::findOrFail($request->id_books);
                     $book->incrementStock();
                 }
-                
-                // Jika dari borrowed menjadi cancelled
+
                 if ($newStatus == 'cancelled' && $oldStatus == 'borrowed') {
                     $book = Book::findOrFail($request->id_books);
                     $book->incrementStock();
@@ -173,7 +160,7 @@ public function create()
             }
 
             $loan->update($request->all());
-            
+
             DB::commit();
 
             return redirect()->route('admin.loans.index')
@@ -192,17 +179,16 @@ public function create()
     public function destroy(string $id)
     {
         $loan = Loan::findOrFail($id);
-        
+
         DB::beginTransaction();
-        
+
         try {
-            // Jika status masih borrowed, kembalikan stok dulu
             if ($loan->status == 'borrowed') {
                 $loan->book->incrementStock();
             }
-            
+
             $loan->delete();
-            
+
             DB::commit();
 
             return redirect()->route('admin.loans.index')
@@ -215,35 +201,31 @@ public function create()
     }
 
     /**
-     * Approve loan - langsung jadi borrowed dan kurangi stok
+     * Approve loan
      */
     public function approve(string $id)
     {
         $loan = Loan::findOrFail($id);
-        
-        // Cek apakah sudah pending
+
         if ($loan->status != 'pending') {
             return redirect()->back()
                 ->with('error', 'Hanya pinjaman dengan status pending yang dapat disetujui');
         }
-        
+
         DB::beginTransaction();
-        
+
         try {
-            // Cek stok buku
             if ($loan->book->stock < 1) {
                 throw new \Exception('Stok buku tidak mencukupi!');
             }
-            
-            // Kurangi stok
+
             $loan->book->decrementStock();
-            
-            // Update status menjadi borrowed
+
             $loan->update([
                 'status' => 'borrowed',
                 'tgl_pinjam' => now()->toDateString()
             ]);
-            
+
             DB::commit();
 
             return redirect()->back()
@@ -256,27 +238,25 @@ public function create()
     }
 
     /**
-     * Return item - tambah stok kembali
+     * Return item
      */
     public function returnItem(string $id)
     {
         $loan = Loan::findOrFail($id);
-        
-        // Cek apakah status borrowed
+
         if ($loan->status != 'borrowed') {
             return redirect()->back()
                 ->with('error', 'Hanya pinjaman dengan status borrowed yang dapat dikembalikan');
         }
-        
+
         DB::beginTransaction();
-        
+
         try {
             $telat = false;
             if ($loan->tgl_kembali_rencana < now()->toDateString()) {
                 $telat = true;
             }
 
-            // Kembalikan stok buku
             $loan->book->incrementStock();
 
             $loan->update([
@@ -284,7 +264,7 @@ public function create()
                 'tgl_kembali_realisasi' => now()->toDateString(),
                 'teguran' => $telat ? 'Terlambat mengembalikan barang' : null
             ]);
-            
+
             DB::commit();
 
             return redirect()->back()

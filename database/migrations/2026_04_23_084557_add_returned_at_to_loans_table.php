@@ -10,8 +10,6 @@ return new class extends Migration
     {
         Schema::table('loans', function (Blueprint $table) {
             $table->timestamp('returned_at')->nullable();
-            // atau jika menggunakan date saja:
-            // $table->date('returned_at')->nullable()->after('loan_date');
         });
     }
 

@@ -12,12 +12,10 @@ use Carbon\Carbon;
 
 class UserLoanController extends Controller
 {
-    // Method baru untuk cek apakah user terkena sanksi
     private function isUserBlocked()
     {
         $userId = Auth::id();
 
-        // Cek apakah ada peminjaman yang terlambat dan belum dikembalikan
         $now = Carbon::now('Asia/Jakarta')->toDateString();
 
         $hasLateReturn = Loan::where('id_users', $userId)
@@ -28,12 +26,11 @@ class UserLoanController extends Controller
         return $hasLateReturn;
     }
 
-    // Di UserLoanController.php, method index()
     public function index(Request $request)
     {
-        // Cek apakah user terkena blokir
+       
         if ($this->isUserBlocked()) {
-            // Ambil data buku yang terlambat untuk ditampilkan
+
             $now = Carbon::now('Asia/Jakarta')->toDateString();
             $lateBooks = Loan::with('book')
                 ->where('id_users', Auth::id())
@@ -50,7 +47,6 @@ class UserLoanController extends Controller
 
         $query = Book::with('category');
 
-        // Tambahkan kondisi where('stock', '>', 0) di sini
         $query = Book::with('category')->where('stock', '>', 0);
 
         $borrowedBookIds = Loan::where('id_users', Auth::id())
@@ -84,7 +80,6 @@ class UserLoanController extends Controller
                 ->with('error', 'Silakan login terlebih dahulu!');
         }
 
-        // Cek apakah user terkena blokir
         if ($this->isUserBlocked()) {
             return redirect()->route('loans')
                 ->with('error', 'Anda tidak bisa meminjam karena ada buku yang belum dikembalikan dan sudah melewati batas waktu pengembalian!');
@@ -96,27 +91,22 @@ class UserLoanController extends Controller
             'tgl_kembali_rencana' => 'required|date|after:tgl_pinjam',
         ]);
 
-        // --- LOGIKA TAMBAHAN: BATASI 7 HARI ---
         $tglPinjam = Carbon::parse($request->tgl_pinjam);
         $tglKembali = Carbon::parse($request->tgl_kembali_rencana);
 
-        // Hitung selisih hari
         $durasi = $tglPinjam->diffInDays($tglKembali);
 
-        // Jika durasi lebih dari 7 hari
         if ($durasi > 7) {
             return back()
                 ->with('error', 'Maksimal durasi peminjaman adalah 7 hari!')
                 ->withInput();
         }
 
-        // Cek ketersediaan buku
         $book = Book::find($request->id_books);
         if (!$book || $book->stock < 1) {
             return back()->with('error', 'Stok buku tidak tersedia!')->withInput();
         }
 
-        // Cek apakah buku sudah dipinjam di tanggal tersebut
         $exists = Loan::where('id_books', $request->id_books)
             ->whereNotIn('status', ['returned', 'cancelled'])
             ->where(function ($q) use ($request) {
@@ -139,7 +129,6 @@ class UserLoanController extends Controller
             'status' => 'pending'
         ]);
 
-        // Redirect ke halaman history dengan notifikasi sukses
         return redirect()->route('loans.history')
             ->with('success', 'Peminjaman buku berhasil diajukan!');
     }
@@ -162,17 +151,15 @@ class UserLoanController extends Controller
         $query = Loan::with('book')
             ->where('id_users', $userId);
 
-        // Filter berdasarkan status (tanpa 'approved')
         if ($status != 'all') {
             $query->where('status', $status);
         } else {
-            // Untuk 'all', tampilkan semua kecuali 'approved'
+
             $query->whereNotIn('status', ['approved']);
         }
 
         $loans = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
-        // Statistik (tanpa 'approved')
         $stats = [
             'total' => Loan::where('id_users', $userId)->whereNotIn('status', ['approved'])->count(),
             'pending' => Loan::where('id_users', $userId)->where('status', 'pending')->count(),

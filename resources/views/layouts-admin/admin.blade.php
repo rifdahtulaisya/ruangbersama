@@ -28,8 +28,6 @@
     <div id="overlay" class="fixed inset-0 bg-black/30 z-30 hidden md:hidden">
     </div>
 
-
-    {{-- KONTEN UTAMA --}}
     <main
         class="pt-8 pb-6 px-4 md:px-6 relative top-[90px] mb-24 md:ml-[320px] md:mr-3 md:rounded-3xl transition-all duration-300 flex flex-col max-w-full">
         @yield('content')

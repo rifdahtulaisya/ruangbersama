@@ -4,7 +4,7 @@
 
 @section('content')
 
-<!-- WELCOME CARD - SINGLE WELCOME MESSAGE -->
+
 <div class="bg-white rounded-xl p-8 shadow-sm border border-slate-100 mb-6">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="flex items-center gap-4">
@@ -26,9 +26,9 @@
 
 </div>
 
-<!-- STATISTIK CARD - HANYA 3 CARD (Sembunyikan di mobile) -->
+
 <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-    <!-- Card 1: Total Peminjaman Bulan Terbaru -->
+    
     <div class="group bg-white rounded-xl p-6 shadow hover:shadow-xl transition">
         <div class="flex justify-between items-center">
             <div>
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- Card 2: Menunggu Persetujuan -->
+    
     <div class="group bg-white rounded-xl p-6 shadow hover:shadow-xl transition">
         <div class="flex justify-between items-center">
             <div>
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <!-- Card 3: Sedang Dipinjam -->
+    
     <div class="group bg-white rounded-xl p-6 shadow hover:shadow-xl transition">
         <div class="flex justify-between items-center">
             <div>
@@ -79,7 +79,7 @@
     </div>
 </div>
 
-<!-- Statistik versi mobile (ringkas) - Muncul hanya di mobile -->
+
 <div class="grid grid-cols-3 gap-3 mb-6 sm:hidden">
     <div class="bg-white rounded-xl p-3 shadow text-center">
         <div class="w-8 h-8 mx-auto flex items-center justify-center rounded-lg bg-amber-100 text-amber-600 mb-2">
@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<!-- QUICK ACTION / REKOMENDASI BUKU -->
+
 <div class="bg-white rounded-xl p-6 shadow">
     <div class="flex justify-between items-center mb-4">
         <div>
@@ -129,7 +129,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         @forelse($popularBooks as $book)
         <div class="border border-slate-100 rounded-lg p-3 hover:shadow-lg transition-all duration-300 group cursor-pointer">
-            <!-- Cover Buku dengan ukuran proporsional -->
+            
             <div class="relative bg-gradient-to-br from-slate-100 to-slate-50 rounded-lg overflow-hidden aspect-[3/4] group-hover:shadow-md transition-all duration-300">
                 @if($book->image && file_exists(storage_path('app/public/' . $book->image)))
                     <img src="{{ asset('storage/' . $book->image) }}" 
@@ -142,14 +142,14 @@
                     </div>
                 @endif
                 
-                <!-- Overlay judul di bagian bawah cover -->
+                
                 <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <h4 class="text-white text-xs font-medium truncate">{{ $book->title }}</h4>
                     <p class="text-white/80 text-xs truncate">{{ $book->author }}</p>
                 </div>
             </div>
             
-            <!-- Informasi Buku di bawah cover -->
+            
             <div class="mt-2 text-center">
                 <h4 class="font-medium text-slate-700 text-sm truncate">{{ $book->title }}</h4>
                 <p class="text-xs text-slate-400 truncate">{{ $book->author }}</p>
@@ -164,7 +164,7 @@
     </div>
 </div>
 
-<!-- RIWAYAT PEMINJAMAN TERBARU -->
+
 <div class="mt-6 bg-white rounded-xl p-6 shadow">
     <div class="flex justify-between items-center mb-4">
         <div>

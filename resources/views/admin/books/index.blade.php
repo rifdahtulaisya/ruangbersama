@@ -212,9 +212,7 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        // SweetAlert untuk session success
         @if (session('success'))
             Swal.fire({
                 icon: 'success',
@@ -235,10 +233,7 @@
                 confirmButtonText: 'OK'
             });
         @endif
-    </script>
 
-    <script>
-        // Search form auto submit
         document.addEventListener('DOMContentLoaded', function() {
             const searchForm = document.getElementById('searchForm');
             const searchInput = document.getElementById('searchInput');
@@ -253,8 +248,7 @@
                 });
             }
         });
-    </script>
-    <script>
+
         document.addEventListener('DOMContentLoaded', function() {
             // Fix Delete Button logic
             const deleteButtons = document.querySelectorAll('.delete-btn');

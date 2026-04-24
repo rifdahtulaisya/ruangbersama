@@ -3,7 +3,7 @@
 @section('title', 'PEMINJAMAN BUKU')
 
 @section('content')
-{{-- Cek jika user diblokir, redirect ke halaman block --}}
+
     @php
         use Carbon\Carbon;
         $now = Carbon::now('Asia/Jakarta')->toDateString();
@@ -66,21 +66,17 @@
                 <div onclick="openLoan('{{ $book->id }}', '{{ $book->title }}', '{{ $book->author }}', '{{ $book->category->category_name ?? 'Tanpa Kategori' }}')"
                     class="group bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 cursor-pointer flex flex-col h-full border border-slate-100 hover:border-amber-200">
 
-                    {{-- Book Cover Container with realistic shadow and spine effect --}}
                     <div class="relative mx-4 mt-4 mb-2">
                         {{-- Shadow under book --}}
                         <div
                             class="absolute -bottom-2 left-2 right-2 h-4 bg-black/20 blur-md rounded-full opacity-60 group-hover:opacity-100 transition">
                         </div>
 
-                        {{-- Book Cover with 3D effect --}}
                         <div class="relative transform group-hover:-translate-y-1 transition duration-300">
-                            {{-- Spine shadow effect on left side --}}
                             <div
                                 class="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-r from-black/30 to-transparent rounded-l-md z-10">
                             </div>
 
-                            {{-- Cover image --}}
                             <div class="aspect-[3/4] rounded-lg overflow-hidden shadow-lg">
                                 @if ($book->image)
                                     <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}"
@@ -94,32 +90,31 @@
                                 @endif
                             </div>
 
-                            {{-- Page edge effect on right side --}}
                             <div
                                 class="absolute right-0 top-1 bottom-1 w-1.5 bg-gradient-to-l from-slate-200 to-transparent rounded-r">
                             </div>
                         </div>
                     </div>
 
-                    {{-- Content Container --}}
+
                     <div class="p-4 md:p-5 flex flex-col flex-grow">
-                        {{-- Title --}}
+                        
                         <h3
                             class="text-base md:text-lg font-bold text-slate-800 line-clamp-2 group-hover:text-amber-700 transition mb-1.5">
                             {{ $book->title }}
                         </h3>
 
-                        {{-- Author --}}
+                        
                         <div class="flex items-center gap-1.5 text-slate-500 mb-3">
                             <i class="fas fa-user-edit text-amber-500 text-xs"></i>
                             <span
                                 class="text-xs md:text-sm truncate">{{ $book->author ?? 'Penulis tidak tersedia' }}</span>
                         </div>
 
-                        {{-- Spacer to push category to bottom --}}
+                        
                         <div class="flex-grow"></div>
 
-                        {{-- Category at the bottom --}}
+                        
                         <div class="mt-3 pt-2 border-t border-slate-100">
                             <span
                                 class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-medium">
@@ -222,18 +217,18 @@
             const modalBookDetail = document.getElementById('modalBookDetail');
             const selectedBookId = document.getElementById('selectedBookId');
 
-            // Ambil waktu saat ini berdasarkan perangkat (Waktu Indonesia)
+            
             const now = new Date();
 
-            // Format YYYY-MM-DD menggunakan standar lokal (en-CA menghasilkan format yang pas untuk input date)
+            
             const today = now.toLocaleDateString('en-CA');
 
-            // Hitung tanggal maksimal (hari ini + 6 hari untuk total 7 hari)
+            
             const maxReturnDate = new Date(now);
             maxReturnDate.setDate(now.getDate() + 6);
             const maxReturnDateStr = maxReturnDate.toLocaleDateString('en-CA');
 
-            // Hitung tanggal besok untuk minimal pengembalian
+            
             const tomorrow = new Date(now);
             tomorrow.setDate(now.getDate() + 1);
             const tomorrowStr = tomorrow.toLocaleDateString('en-CA');
@@ -242,22 +237,22 @@
             const tglKembaliInput = document.getElementById('tgl_kembali_input');
 
             if (tglPinjamInput) {
-                // Set tanggal peminjaman dengan hari ini
+                
                 tglPinjamInput.value = today;
-                tglPinjamInput.readOnly = true; // Hanya readonly, bukan disabled
-                tglPinjamInput.style.backgroundColor = '#f3f4f6'; // Warna abu-abu untuk indikasi readonly
+                tglPinjamInput.readOnly = true; 
+                tglPinjamInput.style.backgroundColor = '#f3f4f6'; 
                 tglPinjamInput.style.cursor = 'not-allowed';
             }
 
             if (tglKembaliInput) {
                 tglKembaliInput.value = '';
                 tglKembaliInput.min = tomorrowStr;
-                tglKembaliInput.max = maxReturnDateStr; // Batas maksimal 7 hari (hari ini + 6)
+                tglKembaliInput.max = maxReturnDateStr; 
                 tglKembaliInput.removeAttribute('readonly');
                 tglKembaliInput.removeAttribute('disabled');
             }
 
-            // Update Detail Buku
+            
             modalBookDetail.innerHTML = `
                 <div class="space-y-2">
                     <div class="grid grid-cols-[100px_1fr] items-baseline">
@@ -321,32 +316,32 @@
                 if (inputPinjam.value) {
                     let startDate = new Date(inputPinjam.value);
 
-                    // Hitung Tanggal Minimal (H+1 setelah pinjam)
+                    
                     let minDate = new Date(startDate);
                     minDate.setDate(startDate.getDate() + 1);
 
-                    // Hitung Tanggal Maksimal (H+6 setelah pinjam, total 7 hari termasuk hari pinjam)
+                    
                     let maxDate = new Date(startDate);
                     maxDate.setDate(startDate.getDate() + 6);
 
-                    // Format ke YYYY-MM-DD untuk atribut input date
+                    
                     const minStr = minDate.toISOString().split('T')[0];
                     const maxStr = maxDate.toISOString().split('T')[0];
 
                     inputKembali.min = minStr;
                     inputKembali.max = maxStr;
 
-                    // Jika tanggal yang sudah terpilih sebelumnya melebihi batas baru, kosongkan
+                    
                     if (inputKembali.value && (inputKembali.value > maxStr || inputKembali.value < minStr)) {
                         inputKembali.value = '';
                     }
                 }
             }
 
-            // Jalankan saat pertama kali halaman dimuat (untuk handle nilai default tgl hari ini)
+            
             updateDateLimits();
 
-            // Jalankan setiap kali input tanggal pinjam diubah
+            
             if (inputPinjam) {
                 inputPinjam.addEventListener('change', updateDateLimits);
             }

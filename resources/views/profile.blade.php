@@ -76,7 +76,8 @@
                                 <label class="block text-sm font-medium text-slate-700 mb-2">
                                     Username
                                 </label>
-                                <input type="text" name="username" value="{{ old('username', Auth::user()->username) }}" required
+                                <input type="text" name="username" value="{{ old('username', Auth::user()->username) }}"
+                                    required
                                     class="w-full px-4 py-3 border border-slate-200 rounded-xl 
                                           focus:border-slate-800 focus:ring-1 focus:ring-slate-800
                                           transition">
@@ -86,7 +87,8 @@
                                 <label class="block text-sm font-medium text-slate-700 mb-2">
                                     Email
                                 </label>
-                                <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}" required
+                                <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}"
+                                    required
                                     class="w-full px-4 py-3 border border-slate-200 rounded-xl 
                                           focus:border-slate-800 focus:ring-1 focus:ring-slate-800
                                           transition">

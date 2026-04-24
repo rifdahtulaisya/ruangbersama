@@ -18,7 +18,6 @@ class MemberController extends Controller
     {
         $query = User::where('role', 'user');
 
-        // Search functionality
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -29,7 +28,6 @@ class MemberController extends Controller
             });
         }
 
-        // Per page functionality
         $perPage = $request->input('per_page', 5);
         $members = $query->orderBy('created_at', 'desc')->paginate($perPage);
 
@@ -43,7 +41,6 @@ class MemberController extends Controller
     {
         $query = User::where('role', 'user');
 
-        // Apply search filter if any
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -55,22 +52,21 @@ class MemberController extends Controller
         }
 
         $members = $query->orderBy('created_at', 'desc')->get();
-        
-        // Generate plain passwords for each member
+
         foreach ($members as $member) {
             $member->plain_password = str_replace(' ', '', strtolower($member->username)) . '123';
         }
-        
+
         $data = [
             'members' => $members,
             'title' => 'Laporan Data Anggota',
             'date' => date('d/m/Y H:i:s'),
             'total' => $members->count()
         ];
-        
+
         $pdf = Pdf::loadView('admin.members.export-pdf', $data);
         $pdf->setPaper('a4', 'landscape');
-        
+
         return $pdf->download('laporan_anggota_' . date('Y-m-d_His') . '.pdf');
     }
 
@@ -81,7 +77,6 @@ class MemberController extends Controller
     {
         $query = User::where('role', 'user');
 
-        // Apply search filter if any
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -94,30 +89,23 @@ class MemberController extends Controller
 
         $members = $query->orderBy('created_at', 'desc')->get();
 
-        // Set filename
         $filename = 'members_export_' . date('Y-m-d_His') . '.csv';
-        
-        // Set headers for CSV download
+
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
-        
-        // Create callback to generate CSV
-        $callback = function() use ($members) {
+
+        $callback = function () use ($members) {
             $file = fopen('php://output', 'w');
-            
-            // Add BOM for UTF-8 (fixes Indonesian characters)
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
-            
-            // Add headers
+
+            fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
             fputcsv($file, ['No', 'Username', 'Nama Lengkap', 'Nomor Anggota', 'Email', 'Password (Plain Text)', 'Tanggal Dibuat']);
-            
-            // Add data
+
             foreach ($members as $index => $member) {
-                // Generate plain password (without hash)
                 $plainPassword = str_replace(' ', '', strtolower($member->username)) . '123';
-                
+
                 fputcsv($file, [
                     $index + 1,
                     $member->username,
@@ -128,10 +116,10 @@ class MemberController extends Controller
                     $member->created_at->format('d/m/Y H:i:s')
                 ]);
             }
-            
+
             fclose($file);
         };
-        
+
         return response()->stream($callback, 200, $headers);
     }
 
@@ -156,7 +144,6 @@ class MemberController extends Controller
             'role' => 'sometimes|in:user,admin'
         ]);
 
-        // Generate password from username (remove spaces + "123")
         $generatedPassword = str_replace(' ', '', strtolower($validated['username'])) . '123';
 
         $validated['password'] = Hash::make($generatedPassword);
@@ -173,7 +160,6 @@ class MemberController extends Controller
      */
     public function show(User $member)
     {
-        // Ensure only user role can be viewed
         if ($member->role !== 'user') {
             abort(404);
         }
@@ -210,7 +196,6 @@ class MemberController extends Controller
             'role' => 'sometimes|in:user,admin'
         ]);
 
-        // Only update password if specifically provided
         if ($request->filled('password')) {
             $request->validate([
                 'password' => 'required|string|min:8'
@@ -235,7 +220,6 @@ class MemberController extends Controller
             abort(404);
         }
 
-        // Langsung hapus member tanpa pengecekan status peminjaman
         $member->delete();
 
         return redirect()->route('admin.members.index')

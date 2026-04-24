@@ -13,10 +13,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        // Pagination - default 5 items per page
         $perPage = $request->input('per_page', 5);
 
-        // Search functionality
         $search = $request->input('search');
 
         $categories = Category::when($search, function ($query, $search) {

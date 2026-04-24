@@ -16,10 +16,8 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-         // Gunakan Auth::check() dan Auth::user()
         if (!Auth::check() || Auth::user()->role !== $role) {
-            
-            // Logika tambahan: jika admin nyasar ke user, lempar ke admin dashboard
+
             if (Auth::check() && Auth::user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             }

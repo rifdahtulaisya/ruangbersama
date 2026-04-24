@@ -14,7 +14,6 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-        // Pastikan ada category dengan id = 1
         $category = Category::find(1);
         
         if (!$category) {

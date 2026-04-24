@@ -3,7 +3,6 @@
 @section('title', 'RIWAYAT PEMINJAMAN')
 
 @section('content')
-    <!-- FILTER DROPDOWN (menggantikan search box) -->
     <div class="bg-white rounded-xl shadow p-4 mb-6">
         <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
             <div class="w-full md:w-auto">
@@ -180,7 +179,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        // Auto submit filter saat dropdown berubah
+        
         document.addEventListener('DOMContentLoaded', function() {
             const statusFilter = document.getElementById('statusFilter');
             const filterForm = document.getElementById('filterForm');

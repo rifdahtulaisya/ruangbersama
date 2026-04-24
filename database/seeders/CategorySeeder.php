@@ -24,6 +24,7 @@ class CategorySeeder extends Seeder
             ['category_name' => 'Sains'],
             ['category_name' => 'Fiksi'],
             ['category_name' => 'Sejarah'],
+            ['category_name' => 'Non Fiksi'],
         ];
 
         foreach ($categories as $category) {

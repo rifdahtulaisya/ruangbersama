@@ -1,5 +1,4 @@
 <?php
-// app/Models/Book.php
 
 namespace App\Models;
 
@@ -12,19 +11,16 @@ class Book extends Model
     protected $fillable = ['category_id', 'title', 'author', 'image', 'stock'];
     protected $dates = ['deleted_at'];
 
-    // Book N - 1 Category
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    // Book 1 - N Loan
     public function loans()
     {
         return $this->hasMany(Loan::class, 'id_books');
     }
-    
-    // Method untuk mengurangi stok
+
     public function decrementStock($amount = 1)
     {
         if ($this->stock >= $amount) {
@@ -35,7 +31,6 @@ class Book extends Model
         return false;
     }
 
-    // Method untuk menambah stok
     public function incrementStock($amount = 1)
     {
         $this->stock += $amount;

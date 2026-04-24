@@ -1,5 +1,4 @@
 <?php
-// app/Models/Loan.php
 
 namespace App\Models;
 
@@ -8,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Loan extends Model
 {
     protected $table = 'loans';
-    
+
     protected $fillable = [
         'id_users',
         'id_books',
@@ -36,12 +35,11 @@ class Loan extends Model
         return $this->belongsTo(Book::class, 'id_books');
     }
 
-     public function isReturned()
+    public function isReturned()
     {
         return !is_null($this->returned_at);
     }
 
-    // Status constants
     const STATUS_PENDING = 'pending';
     const STATUS_BORROWED = 'borrowed';
     const STATUS_RETURNED = 'returned';

@@ -3,10 +3,8 @@
 @section('title', 'BOOK')
 
 @section('content')
-    <!-- HEADER BOX -->
     <div class="bg-white rounded-xl shadow p-5 mb-6">
         <div class="flex items-center gap-4">
-            <!-- BACK BUTTON -->
             <a href="{{ route('admin.books.index') }}"
                 class="w-10 h-10 flex items-center justify-center rounded-lg
                   bg-sky-50 text-sky-600 hover:bg-sky-100 transition">
@@ -19,7 +17,6 @@
         </div>
     </div>
 
-    <!-- ALERT MESSAGE -->
     @if (session('success'))
         <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
             <div class="flex items-center justify-between">
@@ -35,13 +32,11 @@
         </div>
     @endif
 
-    <!-- FORM CARD -->
     <div class="bg-white rounded-xl shadow p-6">
         <form action="{{ route('admin.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            {{-- Error global --}}
             @if ($errors->any())
                 <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                     <ul class="list-disc list-inside space-y-1">
@@ -52,7 +47,6 @@
                 </div>
             @endif
 
-            <!-- CATEGORY FIELD -->
             <div class="mb-5">
                 <label for="category_id" class="block text-sm font-medium text-slate-700 mb-2">
                     Kategori <span class="text-red-500">*</span>
@@ -63,7 +57,8 @@
                                bg-white">
                     <option value="">-- Pilih Kategori --</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id', $book->category_id) == $category->id ? 'selected' : '' }}>
+                        <option value="{{ $category->id }}"
+                            {{ old('category_id', $book->category_id) == $category->id ? 'selected' : '' }}>
                             {{ $category->category_name }}
                         </option>
                     @endforeach
@@ -73,7 +68,6 @@
                 @enderror
             </div>
 
-            <!-- BOOK TITLE FIELD -->
             <div class="mb-5">
                 <label for="title" class="block text-sm font-medium text-slate-700 mb-2">
                     Judul Buku <span class="text-red-500">*</span>
@@ -88,7 +82,6 @@
                 @enderror
             </div>
 
-            <!-- AUTHOR FIELD -->
             <div class="mb-5">
                 <label for="author" class="block text-sm font-medium text-slate-700 mb-2">
                     Penulis <span class="text-red-500">*</span>
@@ -103,7 +96,6 @@
                 @enderror
             </div>
 
-            <!-- STOCK FIELD -->
             <div class="mb-5">
                 <label for="stock" class="block text-sm font-medium text-slate-700 mb-2">
                     Stok Buku <span class="text-red-500">*</span>
@@ -119,45 +111,37 @@
                 @enderror
             </div>
 
-            <!-- IMAGE SECTION -->
             <div class="mb-5">
                 <label class="block text-sm font-medium text-slate-700 mb-2">
                     Gambar Buku
                 </label>
-                
-                <!-- Container untuk menampilkan gambar (current atau preview) -->
+
                 <div id="imagePreviewContainer" class="mb-4">
-                    @if($book->image)
-                    <div id="currentImageWrapper">
-                        <div class="flex items-start gap-4 p-3 bg-stone-50 rounded-lg border border-stone-200">
-                            <div class="relative">
-                                <img src="{{ asset('storage/' . $book->image) }}" 
-                                     alt="{{ $book->title }}" 
-                                     id="currentImage"
-                                     class="w-32 h-32 object-cover rounded-lg border border-stone-200">
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm text-stone-600">Gambar saat ini</p>
-                                <button type="button" 
-                                        id="removeCurrentImageBtn"
+                    @if ($book->image)
+                        <div id="currentImageWrapper">
+                            <div class="flex items-start gap-4 p-3 bg-stone-50 rounded-lg border border-stone-200">
+                                <div class="relative">
+                                    <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->title }}"
+                                        id="currentImage" class="w-32 h-32 object-cover rounded-lg border border-stone-200">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-stone-600">Gambar saat ini</p>
+                                    <button type="button" id="removeCurrentImageBtn"
                                         class="mt-2 text-xs text-red-600 hover:text-red-700 flex items-center gap-1">
-                                    <i class="fa-solid fa-trash"></i> Hapus gambar
-                                </button>
+                                        <i class="fa-solid fa-trash"></i> Hapus gambar
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
-                    
+
                     <div id="newImagePreview" style="display: none;">
                         <div class="flex items-start gap-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
                             <div class="relative">
-                                <img src="" 
-                                     alt="Preview" 
-                                     id="previewImage"
-                                     class="w-32 h-32 object-cover rounded-lg border border-blue-200">
-                                <button type="button" 
-                                        id="cancelNewImageBtn"
-                                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition">
+                                <img src="" alt="Preview" id="previewImage"
+                                    class="w-32 h-32 object-cover rounded-lg border border-blue-200">
+                                <button type="button" id="cancelNewImageBtn"
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition">
                                     <i class="fa-solid fa-times"></i>
                                 </button>
                             </div>
@@ -169,7 +153,6 @@
                     </div>
                 </div>
 
-                <!-- INPUT FILE -->
                 <div class="flex items-center justify-center w-full">
                     <label for="image"
                         class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-stone-300 rounded-lg cursor-pointer
@@ -190,7 +173,6 @@
                 @enderror
             </div>
 
-            <!-- BUTTON SUBMIT -->
             <div class="flex justify-end gap-3 pt-6 border-t border-stone-100">
                 <button type="submit"
                     class="px-5 py-2.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white
@@ -213,79 +195,69 @@
         const removeCurrentImageBtn = document.getElementById('removeCurrentImageBtn');
         const cancelNewImageBtn = document.getElementById('cancelNewImageBtn');
 
-        // Handle file selection
         imageInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
-                
-                // Validate file size (2MB max)
+
                 if (file.size > 2 * 1024 * 1024) {
                     alert('Ukuran file terlalu besar! Maksimal 2MB.');
                     this.value = '';
                     return;
                 }
-                
-                // Validate file type
+
                 const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/svg+xml'];
                 if (!allowedTypes.includes(file.type)) {
                     alert('Format file tidak didukung! Gunakan PNG, JPG, GIF, atau SVG.');
                     this.value = '';
                     return;
                 }
-                
-                // Create preview
+
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                     newImageName.textContent = 'File: ' + file.name;
                     newImagePreview.style.display = 'block';
-                    
-                    // Hide current image wrapper if exists
+
                     if (currentImageWrapper) {
                         currentImageWrapper.style.display = 'none';
                     }
-                    
-                    // Reset remove image flag
+
                     removeImageInput.value = '0';
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Handle remove current image
         if (removeCurrentImageBtn) {
             removeCurrentImageBtn.addEventListener('click', function() {
                 if (confirm('Apakah Anda yakin ingin menghapus gambar ini?')) {
                     removeImageInput.value = '1';
                     currentImageWrapper.style.display = 'none';
-                    
-                    // Clear file input if any
+
                     imageInput.value = '';
                     newImagePreview.style.display = 'none';
                 }
             });
         }
 
-        // Handle cancel new image
         if (cancelNewImageBtn) {
             cancelNewImageBtn.addEventListener('click', function() {
-                // Clear file input
+
                 imageInput.value = '';
-                // Hide new image preview
+
                 newImagePreview.style.display = 'none';
-                // Show current image wrapper if exists and not removed
+
                 if (currentImageWrapper && removeImageInput.value !== '1') {
                     currentImageWrapper.style.display = 'block';
                 }
-                // Clear preview
+
                 previewImage.src = '';
                 newImageName.textContent = '';
             });
         }
 
-        // Drag and drop functionality
         const dropZone = document.querySelector('label[for="image"]');
-        
+
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
         });
@@ -311,8 +283,7 @@
             const dt = e.dataTransfer;
             const files = dt.files;
             imageInput.files = files;
-            
-            // Trigger change event
+
             const changeEvent = new Event('change');
             imageInput.dispatchEvent(changeEvent);
         }, false);
